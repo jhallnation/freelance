@@ -15,12 +15,20 @@ const Rx_1 = require("rxjs/Rx");
 let ProposalService = class ProposalService {
     constructor(http) {
         this.http = http;
-        this.proposalUrl = 'http://localhost:3002/proposals.json';
+        this.proposalsUrl = 'http://localhost:3002/proposals';
     }
     getProposals() {
-        return this.http.get(this.proposalUrl)
+        return this.http.get(this.proposalsUrl)
             .map((response) => response.json())
             .catch(this.handleError);
+    }
+    getProposal(id) {
+        return this.http.get(this.proposalsUrl + "/" + id + ".json");
+    }
+    createProposal(proposal) {
+        let headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        let options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.proposalsUrl, JSON.stringify(proposal), { headers: headers }).map((res) => res.json());
     }
     handleError(error) {
         // In a real world app, we might use a remote logging infrastructure
